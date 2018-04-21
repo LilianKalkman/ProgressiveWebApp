@@ -4,6 +4,18 @@ var closeCreatePostModalButton = document.querySelector('#close-create-post-moda
 
 function openCreatePostModal() {
   createPostArea.style.display = 'block';
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(choiceResult){
+      console.log(choiceResult.outcome);
+      if(choiceResult.outcome === 'dismissed'){
+        console.log('user dismissed installation add to home');
+      } else {
+        console.log('user accepted adding to homescreen');
+      }
+    });
+    deferredPrompt = null;
+  }
 }
 
 function closeCreatePostModal() {
