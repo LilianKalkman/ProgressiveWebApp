@@ -21,7 +21,6 @@ self.addEventListener('install', function(event) {
         'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
         'https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',
         'https://fonts.gstatic.com/s/materialicons/v36/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
-        'https://fonts.gstatic.com/s/materialicons/v36/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2'
       ]);
     })
   )
@@ -39,7 +38,14 @@ self.addEventListener('fetch', function(event) {
         if(response){
           return response;
         } else {
-          return fetch(event.request);
+          return fetch(event.request)
+          .then(function(res){
+            return caches.open('dynamic')
+            .then(function(cache){
+              cache.put(event.request.url, res.clone());
+              return res;
+            })
+          });
         }
       })
   );
