@@ -52,10 +52,12 @@ function createCard() {
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
-fetch('https://httpbin.org/get')
-  .then(function(res) {
-    return res.json();
-  })
-  .then(function(data) {
-    createCard();
-  });
+// fetch('https://httpbin.org/get')
+//   .then(function(res) {
+//     return res.json();
+//   })
+//   .then(function(data) {
+//     createCard();
+//   });
+
+createCard();
