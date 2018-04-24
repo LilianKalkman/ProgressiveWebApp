@@ -18,9 +18,7 @@ self.addEventListener('install', function(event) {
         '/src/images/main-image.jpg',
         'https://fonts.googleapis.com/css?family=Roboto:400,700',
         'https://fonts.googleapis.com/icon?family=Material+Icons',
-        'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css',
-        'https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2',
-        'https://fonts.gstatic.com/s/materialicons/v36/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
+        'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
       ]);
     })
   )
@@ -45,6 +43,9 @@ self.addEventListener('fetch', function(event) {
               cache.put(event.request.url, res.clone());
               return res;
             })
+          })
+          .catch(function(err){
+
           });
         }
       })
