@@ -3,6 +3,7 @@ var createPostArea = document.querySelector('#create-post');
 var closeCreatePostModalButton = document.querySelector('#close-create-post-modal-btn');
 var sharedMomentsArea = document.querySelector('#shared-moments');
 
+
 function openCreatePostModal() {
   createPostArea.style.display = 'block';
   if (deferredPrompt) {
@@ -27,8 +28,19 @@ function closeCreatePostModal() {
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
-
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
+
+// niet gebruikt, is andere manier van data in cache opslaan (ipv dynamic caching)
+function onSaveButtonClicked(event){
+  console.log('button clicked');
+  if('caches' in window){
+    caches.open('user-requested')
+    .then(function(cache){
+      cache.add('https://httpbin.org/get');
+      cache.add('/src/images/sf-boat.jpg')
+    })
+  }
+}
 
 function createCard() {
   var cardWrapper = document.createElement('div');
@@ -48,15 +60,22 @@ function createCard() {
   cardSupportingText.className = 'mdl-card__supporting-text';
   cardSupportingText.textContent = 'In San Francisco';
   cardSupportingText.style.textAlign = 'center';
+  // var cardSaveButton = document.createElement('button');
+  // cardSaveButton.textContent = 'Save';
+  // cardSaveButton.addEventListener('click', onSaveButtonClicked);
+  // cardSupportingText.appendChild(cardSaveButton);
   cardWrapper.appendChild(cardSupportingText);
-  componentHandler.upgradeElement(cardWrapper);
+  // componentHandler.upgradeElement(cardWrapper);
   sharedMomentsArea.appendChild(cardWrapper);
 }
 
-fetch('https://httpbin.org/get')
-  .then(function(res) {
-    return res.json();
-  })
-  .then(function(data) {
-    createCard();
-  });
+
+createCard();
+
+// fetch('https://httpbin.org/get')
+//   .then(function(res) {
+//     return res.json();
+//   })
+//   .then(function(data) {
+//     createCard();
+//   });
