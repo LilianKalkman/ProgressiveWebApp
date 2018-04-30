@@ -27,6 +27,17 @@ self.addEventListener('install', function(event) {
   )
 });
 
+function trimCache(cacheName, maxItems){
+  caches.open(cacheName)
+  .then(function(cache){
+    return cache.keys().then(function(keys){
+      if(keys.length > maxItems){
+        cache.delete(keys[0]).then(trimCache(cacheName, maxItems));
+      }
+    })
+  });
+}
+
 self.addEventListener('activate', function(event) {
   console.log('[Service Worker] Activating Service Worker ....', event);
   event.waitUntil(
@@ -45,6 +56,8 @@ self.addEventListener('activate', function(event) {
   return self.clients.claim();
 });
 
+// strategy: first cache, then network request
+
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
@@ -57,6 +70,7 @@ self.addEventListener('fetch', function(event) {
             return caches.open(CACHE_DYNAMIC_NAME)
             .then(function(cache){
               cache.put(event.request.url, res.clone());
+              trimCache(CACHE_DYNAMIC_NAME, 6);
               return res;
             })
           })
@@ -70,3 +84,20 @@ self.addEventListener('fetch', function(event) {
       })
   );
 });
+
+// strategy: first network request, then cache
+//
+// self.addEventListener('fetch', function(event){
+//   event.respondWith(
+//     fetch(event.request)
+//     .then(function(res){
+//       return caches.open(CACHE_DYNAMIC_NAME)
+//       .then(function(cache){
+//         cache.put(event.request.url, res.clone());
+//         return res;
+//     })
+//     .catch(function(err){
+//       return caches.match(event.request)
+//     });
+//   );
+// });
