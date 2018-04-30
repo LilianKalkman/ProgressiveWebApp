@@ -57,7 +57,6 @@ self.addEventListener('activate', function(event) {
 });
 
 // strategy: first cache, then network request
-
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
@@ -70,14 +69,16 @@ self.addEventListener('fetch', function(event) {
             return caches.open(CACHE_DYNAMIC_NAME)
             .then(function(cache){
               cache.put(event.request.url, res.clone());
-              trimCache(CACHE_DYNAMIC_NAME, 6);
+              trimCache(CACHE_DYNAMIC_NAME, 20);
               return res;
             })
           })
           .catch(function(err){
             return caches.open(CACHE_STATIC_NAME)
             .then(function(cache){
-              return cache.match('/offline.html');
+              if (event.request.headers.get('accept').includes('text/html')) {
+                return cache.match('/offline.html');
+              }
             });
           });
         }
