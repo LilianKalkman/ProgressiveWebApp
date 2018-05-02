@@ -31,16 +31,16 @@ shareImageButton.addEventListener('click', openCreatePostModal);
 closeCreatePostModalButton.addEventListener('click', closeCreatePostModal);
 
 // niet gebruikt, is andere manier van data in cache opslaan (ipv dynamic caching)
-function onSaveButtonClicked(event){
-  console.log('button clicked');
-  if('caches' in window){
-    caches.open('user-requested')
-    .then(function(cache){
-      cache.add('https://httpbin.org/get');
-      cache.add('/src/images/sf-boat.jpg')
-    })
-  }
-}
+// function onSaveButtonClicked(event){
+//   console.log('button clicked');
+//   if('caches' in window){
+//     caches.open('user-requested')
+//     .then(function(cache){
+//       cache.add('https://httpbin.org/get');
+//       cache.add('/src/images/sf-boat.jpg')
+//     })
+//   }
+// }
 
 function createCard(data) {
   var cardWrapper = document.createElement('div');
@@ -93,27 +93,18 @@ fetch(url)
     networkDataReceived = true;
     console.log('From web', data);
     var dataArray = [];
-    for (var key in data){
+    for (var key in data) {
       dataArray.push(data[key]);
-    };
+    }
     updateUI(dataArray);
   });
 
-if ('caches' in window) {
-  caches.match(url)
-    .then(function(response) {
-      if (response) {
-        return response.json();
-      }
-    })
+if ('indexedDB' in window) {
+  readAllData('posts')
     .then(function(data) {
-      console.log('From cache', data);
       if (!networkDataReceived) {
-        var dataArray = [];
-        for (var key in data){
-          dataArray.push(data[key]);
-        };
-        updateUI(dataArray);
+        console.log('From indexdb', data);
+        updateUI(data);
       }
     });
 }
