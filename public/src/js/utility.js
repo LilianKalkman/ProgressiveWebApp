@@ -25,10 +25,21 @@ function readAllData(st) {
 }
 
 function clearAllData(st){
-  dbPromise.then(function(db){
+  return dbPromise.then(function(db){
     var tx = db.transaction(st, 'readwrite');
     var store = db.objectStore(st);
     store.clear();
     return tx.complete;
+  });
+}
+
+function deleteItemFromData(st, id){
+  dbPromise.then(function(db){
+    var tx = db.transaction(st, 'readwrite');
+    var store = db.objectStore(st);
+    store.delete(id);
+    return tx.complete;
+  }).then(function(){
+    console.log('item deleted');
   });
 }
