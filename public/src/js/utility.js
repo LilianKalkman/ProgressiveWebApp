@@ -1,5 +1,5 @@
 
-var dbPromise = idb.open('posts-store', 2, function (db) {
+var dbPromise = idb.open('posts-store', 1, function (db) {
   if (!db.objectStoreNames.contains('posts')) {
     db.createObjectStore('posts', {keyPath: 'id'});
   }
@@ -22,4 +22,13 @@ function readAllData(st) {
       var store = tx.objectStore(st);
       return store.getAll();
     });
+}
+
+function clearAllData(st){
+  dbPromise.then(function(db){
+    var tx = db.transaction(st, 'readwrite');
+    var store = db.objectStore(st);
+    store.clear();
+    return tx.complete;
+  });
 }
