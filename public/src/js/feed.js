@@ -2,6 +2,36 @@ var shareImageButton = document.querySelector('#share-image-button');
 var createPostArea = document.querySelector('#create-post');
 var closeCreatePostModalButton = document.querySelector('#close-create-post-modal-btn');
 var sharedMomentsArea = document.querySelector('#shared-moments');
+var form = document.querySelector('form');
+var titleInput = document.querySelector('#title');
+var locationInput = document.querySelector('#location');
+
+
+form.addEventListener('submit', function(event){
+  event.preventDefault();
+  if(titleInput.value.trim() === '' || locationInput.value.trim() === ''){
+    alert('Please enter valid data!');
+    return;
+  }
+  closeCreatePostModal();
+  if('serviceWorker' in navigator && 'SyncManager' in window){
+    serviceWorker.ready
+    .then(function(sw){
+      var post = {
+        id: new Date().toISOString(),
+        title: titleInput.value,
+        location = locationInput.value
+      };
+      writeData('sync-posts', post)
+      .then(function(){
+        sw.sync.register('sync-new-post');
+      })
+      .catch(function(err){
+        console.log(err);
+      })
+    })
+  }
+});
 
 
 function openCreatePostModal() {
@@ -113,3 +143,12 @@ if ('indexedDB' in window) {
       }
     });
 }
+
+
+// in deze (en je gewone js files) heb je wel toegang tot je browser storage (cache en indexedDB),
+// dus je kan ze LEZEN, maar je kan niks wijzigen; dat kan alleen in je SW.
+// Om in je js files Echte toegang tot sw te krijgen moet je hem dus apart openen,
+// zoals in de sync function!
+// READ, not WRITE (only when opened handmatig)
+// in je SW alleen access tot de lifecycle sw events, en dus niet tot een gewone js event, zoals
+// de form submit. Daarom in die gevallen in je js file de SW openen.
