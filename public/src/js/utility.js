@@ -43,3 +43,7 @@ function deleteItemFromData(st, id){
     console.log('item deleted');
   });
 }
+
+// only when writing/making changes to the indexedDB you have to make sure to complete the transaction width
+// tx.complete
+// not needed when reading
