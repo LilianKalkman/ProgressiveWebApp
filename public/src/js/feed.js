@@ -6,6 +6,28 @@ var form = document.querySelector('form');
 var titleInput = document.querySelector('#title');
 var locationInput = document.querySelector('#location');
 
+function sendData(){
+  fetch('https://l-ilstagram.firebaseio.com/posts.json', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept':'application/json'
+    },
+    body: JSON.stringify({
+      id: new Date().toISOString(),
+      title: titleInput.value,
+      location: locationInput.value,
+      image: "XXX",
+    }),
+  })
+  .then(function(response){
+    console.log('data gepost zonder sw', response);
+  })
+  .catch(function(err){
+    console.log(err);
+  })
+}
+
 
 form.addEventListener('submit', function(event){
   event.preventDefault();
@@ -25,11 +47,14 @@ form.addEventListener('submit', function(event){
       writeData('sync-posts', post)
       .then(function(){
         sw.sync.register('sync-new-post');
+        // registering task in sw
       })
       .catch(function(err){
         console.log(err);
       })
     })
+  } else {
+    sendData();
   }
 });
 
