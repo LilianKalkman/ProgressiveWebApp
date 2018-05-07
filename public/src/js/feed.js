@@ -37,16 +37,16 @@ form.addEventListener('submit', function(event){
   }
   closeCreatePostModal();
   if('serviceWorker' in navigator && 'SyncManager' in window){
-    serviceWorker.ready
+    navigator.serviceWorker.ready
     .then(function(sw){
       var post = {
         id: new Date().toISOString(),
         title: titleInput.value,
-        location = locationInput.value
+        location: locationInput.value
       };
       writeData('sync-posts', post)
       .then(function(){
-        sw.sync.register('sync-new-post');
+        sw.sync.register('sync-new-posts');
         // registering task in sw
       })
       .catch(function(err){

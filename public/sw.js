@@ -2,7 +2,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v26';
+var CACHE_STATIC_NAME = 'static-v30';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
   '/',
@@ -180,3 +180,45 @@ self.addEventListener('fetch', function (event) {
 //     fetch(event.request)
 //   );
 // });
+
+
+self.addEventListener('sync', function(event){
+  console.log('SW is background syncing');
+  if(event.tag === 'sync-new-posts'){
+    console.log('syncing new posts task');
+    event.waitUntil(
+      readAllData('sync-posts')
+      .then(function(data){
+        for (var dt of data){
+          fetch('https://l-ilstagram.firebaseio.com/posts.json', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept':'application/json'
+            },
+            body: JSON.stringify({
+              id: dt.id,
+              title: dt.title,
+              location: dt.location,
+              image: 'XXX',
+            }),
+          })
+          .then(function(response){
+            console.log('data gepost met sync sw', response);
+            if(response.ok){
+              deleteItemFromData('sync-posts', dt.id);
+            }
+          })
+          .catch(function(err){
+            console.log(err);
+          })
+        }
+      })
+    )
+  }
+})
+
+// in je gewone js file registreer je je sync task/tag (en store je de nodige data in IndexedDB,
+// in een nieuwe store die je aanmaakt.
+// dan ga je in je SW lifecycle 'sync' event, verwijzen naar de specifieke task (naam die je aan registratie hebt gegeven!)
+// om deze uit te voeren hoe jij wilt.
