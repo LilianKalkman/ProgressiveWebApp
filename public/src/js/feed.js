@@ -7,7 +7,7 @@ var titleInput = document.querySelector('#title');
 var locationInput = document.querySelector('#location');
 
 function sendData(){
-  fetch('https://l-ilstagram.firebaseio.com/posts.json', {
+  fetch('https://us-central1-l-ilstagram.cloudfunctions.net/storeInstaData', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ form.addEventListener('submit', function(event) {
     alert('Please enter valid data!');
     return;
   }
-  
+
   closeCreatePostModal();
 
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
