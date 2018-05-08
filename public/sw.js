@@ -2,7 +2,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v34';
+var CACHE_STATIC_NAME = 'static-v35';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
   '/',
@@ -199,7 +199,7 @@ self.addEventListener('sync', function(event) {
                 id: dt.id,
                 title: dt.title,
                 location: dt.location,
-                image: 'https://firebasestorage.googleapis.com/v0/b/pwagram-99adf.appspot.com/o/sf-boat.jpg?alt=media&token=19f4770c-fc8c-4882-92f1-62000ff06f16'
+                image: 'https://firebasestorage.googleapis.com/v0/b/l-ilstagram.appspot.com/o/IMG_4363.jpg?alt=media&token=43c957aa-331f-4e79-9b37-c623c1c1a4ef'
               })
             })
               .then(function(res) {

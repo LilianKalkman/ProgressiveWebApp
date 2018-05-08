@@ -35,9 +35,7 @@ form.addEventListener('submit', function(event) {
     alert('Please enter valid data!');
     return;
   }
-  //
-  // sendData();
-
+  
   closeCreatePostModal();
 
   if ('serviceWorker' in navigator && 'SyncManager' in window) {
