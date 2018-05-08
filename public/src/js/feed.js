@@ -17,7 +17,7 @@ function sendData(){
       id: new Date().toISOString(),
       title: titleInput.value,
       location: locationInput.value,
-      image: "XXX",
+      image: "",
     }),
   })
   .then(function(response){
@@ -28,35 +28,73 @@ function sendData(){
   })
 }
 
-
-form.addEventListener('submit', function(event){
+form.addEventListener('submit', function(event) {
   event.preventDefault();
-  if(titleInput.value.trim() === '' || locationInput.value.trim() === ''){
+
+  if (titleInput.value.trim() === '' || locationInput.value.trim() === '') {
     alert('Please enter valid data!');
     return;
   }
+  //
+  // sendData();
+
   closeCreatePostModal();
-  if('serviceWorker' in navigator && 'SyncManager' in window){
+
+  if ('serviceWorker' in navigator && 'SyncManager' in window) {
     navigator.serviceWorker.ready
-    .then(function(sw){
-      var post = {
-        id: new Date().toISOString(),
-        title: titleInput.value,
-        location: locationInput.value
-      };
-      writeData('sync-posts', post)
-      .then(function(){
-        sw.sync.register('sync-new-posts');
-        // registering task in sw
-      })
-      .catch(function(err){
-        console.log(err);
-      })
-    })
+      .then(function(sw) {
+        var post = {
+          id: new Date().toISOString(),
+          title: titleInput.value,
+          location: locationInput.value,
+          image: "https://firebasestorage.googleapis.com/v0/b/l-ilstagram.appspot.com/o/IMG_4363.jpg?alt=media&token=43c957aa-331f-4e79-9b37-c623c1c1a4ef"
+        };
+        writeData('sync-posts', post)
+          .then(function() {
+            return sw.sync.register('sync-new-posts');
+          })
+          .then(function() {
+            var snackbarContainer = document.querySelector('#confirmation-toast');
+            var data = {message: 'Your Post was saved for syncing!'};
+            snackbarContainer.MaterialSnackbar.showSnackbar(data);
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
+      });
   } else {
     sendData();
   }
 });
+
+// form.addEventListener('submit', function(event){
+//   event.preventDefault();
+//   if(titleInput.value.trim() === '' || locationInput.value.trim() === ''){
+//     alert('Please enter valid data!');
+//     return;
+//   }
+//   closeCreatePostModal();
+//   if('serviceWorker' in navigator && 'SyncManager' in window){
+//     navigator.serviceWorker.ready
+//     .then(function(sw){
+//       var post = {
+//         id: new Date().toISOString(),
+//         title: titleInput.value,
+//         location: locationInput.value
+//       };
+//       writeData('sync-posts', post)
+//       .then(function(){
+//         sw.sync.register('sync-new-posts');
+//         // registering task in sw
+//       })
+//       .catch(function(err){
+//         console.log(err);
+//       })
+//     })
+//   } else {
+//     sendData();
+//   }
+// });
 
 
 function openCreatePostModal() {
