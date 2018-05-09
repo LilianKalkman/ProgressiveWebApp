@@ -24,12 +24,21 @@ window.addEventListener('beforeinstallprompt', function(event) {
   return false;
 });
 
+function displayConfirmNotification(){
+  const options = {
+    body: 'Let the stalking begin:)'
+  };
+  new Notification('Confirmed Notifications, lekker bezig!', options);
+}
+
 function askPermission(){
   Notification.requestPermission(function(result){
     if(result !== 'granted'){
       console.log('No permission from user');
     } else {
       console.log('permission given');
+      displayConfirmNotification();
+      // set display buttons back to none
     }
   })
 }
