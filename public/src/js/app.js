@@ -26,16 +26,29 @@ window.addEventListener('beforeinstallprompt', function(event) {
 
 function displayConfirmNotification(){
   const options = {
-    body: 'Let the stalking begin:)'
+    body: 'Let the stalking begin',
+    icon: 'https://d30y9cdsu7xlg0.cloudfront.net/png/154626-200.png',
+    image: 'https://d30y9cdsu7xlg0.cloudfront.net/png/154626-200.png',
+    vibrate: [100, 50, 200],
+    badge: '/src/images/icons/app-icon-96x96.png',
+    tag: 'confirm-notification',
+    renotify: true,
+    actions: [
+      {action: 'confirm', title: 'Ok', icon: 'https://image.freepik.com/iconen-gratis/duim-omhoog-te-vinden-op-facebook_318-37196.jpg'},
+      {action: 'cancel', title: 'Ok Doei', icon: 'https://image.freepik.com/iconen-gratis/duim-omhoog-te-vinden-op-facebook_318-37196.jpg'}
+    ]
   };
   if('serviceWorker' in navigator){
     navigator.serviceWorker.ready.then(function(sw){
-      sw.showNotification('Confirmed Notifications (from SW), lekker bezig!', options);
+      sw.showNotification('Confirmed Notifications, lekker bezig!', options);
     })
   } else {
     new Notification('Confirmed Notifications, lekker bezig!', options);
   }
 }
+
+// de tag option geeft een id/name/ref naar je notification, en je renotify optie bepaalt op je bij een zelfde notificatie
+// (met zelfde naam/tag) je telefoon weer vibreert en notificatie laat zien of niet.
 
 function askPermission(){
   Notification.requestPermission(function(result){

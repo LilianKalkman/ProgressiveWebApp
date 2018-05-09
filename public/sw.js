@@ -225,3 +225,25 @@ self.addEventListener('sync', function(event) {
 // in een nieuwe store die je aanmaakt.
 // dan ga je in je SW lifecycle 'sync' event, verwijzen naar de specifieke task (naam die je aan registratie hebt gegeven!)
 // om deze uit te voeren hoe jij wilt.
+
+
+self.addEventListener('notificationclick', function(event){
+  const notification = event.notification;
+  const action = event.action;
+  console.log(event, notification, action);
+  if(action === 'confirm'){
+    console.log('confirm/ok was chosen');
+    notification.close();
+  } else {
+    console.log(action);
+    notification.close();
+  }
+})
+
+// de notificationclick event reageert/luistert naar de actions die je je notificatie meegeeft
+
+// de notificationclose event is als je je notificatie helemaal wegklikt (staat los van de actions opties)
+
+self.addEventListener('notificationclose', function(event){
+  console.log('notification was closed...', event);
+})
