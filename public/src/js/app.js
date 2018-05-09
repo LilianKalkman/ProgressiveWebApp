@@ -1,3 +1,4 @@
+var buttonsPermissionNotifications = document.querySelectorAll('.enable-notifications');
 
 var deferredPrompt;
 
@@ -22,3 +23,20 @@ window.addEventListener('beforeinstallprompt', function(event) {
   deferredPrompt = event;
   return false;
 });
+
+function askPermission(){
+  Notification.requestPermission(function(result){
+    if(result !== 'granted'){
+      console.log('No permission from user');
+    } else {
+      console.log('permission given');
+    }
+  })
+}
+
+if('Notification' in window){
+  for(var i = 0; i < buttonsPermissionNotifications.length; i++){
+    buttonsPermissionNotifications[i].style.display = 'inline-block';
+    buttonsPermissionNotifications[i].addEventListener('click', askPermission);
+  }
+}
