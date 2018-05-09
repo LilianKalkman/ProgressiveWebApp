@@ -50,13 +50,67 @@ function displayConfirmNotification(){
 // de tag option geeft een id/name/ref naar je notification, en je renotify optie bepaalt op je bij een zelfde notificatie
 // (met zelfde naam/tag) je telefoon weer vibreert en notificatie laat zien of niet.
 
+let swreg;
+function createSubscription(){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready
+    .then(function(sw){
+      swreg = sw;
+      return sw.pushManager.getSubscription();
+      // gets subscription for THIS browser ON this device.
+    })
+    .then(function(sub){
+      if(sub === null){
+        // get vapid key with help of web-push package
+        const vapidPublicKey = 'BDyfedOXAr6Z-aKtV0Xt7jbKh0qIJ9Z8ko8A51H0bXQ4NjKh-M6Rg8i1aueRMSGyU29JKNAgSkLsqUIFt85QVxQ';
+        // convert key to right value with help of helper function from utility.js
+        const convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
+        // pass this to subscription
+
+        // create new subscription
+        // add object to add security; key that allows only one server to send push notifications.
+        return swreg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedVapidPublicKey
+        });
+      } else {
+        // we have a subscription already
+      }
+    })
+    .then(function(newSubscription){
+      return fetch('https://l-ilstagram.firebaseio.com/subscriptions.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type':'application/json',
+          'Accept':'application/json'
+        },
+        body: JSON.stringify(newSubscription)
+      })
+    })
+    .then(function(response){
+      if(response.ok){
+        displayConfirmNotification();
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+  } else {
+    return;
+  }
+}
+
+// store public vapid key here and store private vapid key in serviceWorker
+// push browser server will match these and make sure only that/your server can access/write it.
+
 function askPermission(){
   Notification.requestPermission(function(result){
     if(result !== 'granted'){
       console.log('No permission for notifications from user');
     } else {
       console.log('permission given to send notifications');
-      displayConfirmNotification();
+      // displayConfirmNotification();
+      createSubscription();
       // set display buttons back to none
     }
   })

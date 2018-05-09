@@ -50,3 +50,21 @@ function deleteItemFromData(st, id){
 // only when writing/making changes to the indexedDB you have to make sure to complete the transaction width
 // tx.complete
 // not needed when reading
+
+
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+// hoeft dit niet te snappen; is een function die je VAPID key omzet naar goede waarde...
+// to send to (new) subscription 
