@@ -28,15 +28,21 @@ function displayConfirmNotification(){
   const options = {
     body: 'Let the stalking begin:)'
   };
-  new Notification('Confirmed Notifications, lekker bezig!', options);
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.ready.then(function(sw){
+      sw.showNotification('Confirmed Notifications (from SW), lekker bezig!', options);
+    })
+  } else {
+    new Notification('Confirmed Notifications, lekker bezig!', options);
+  }
 }
 
 function askPermission(){
   Notification.requestPermission(function(result){
     if(result !== 'granted'){
-      console.log('No permission from user');
+      console.log('No permission for notifications from user');
     } else {
-      console.log('permission given');
+      console.log('permission given to send notifications');
       displayConfirmNotification();
       // set display buttons back to none
     }
