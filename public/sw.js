@@ -2,7 +2,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/utility.js');
 
-var CACHE_STATIC_NAME = 'static-v35';
+var CACHE_STATIC_NAME = 'static-v36';
 var CACHE_DYNAMIC_NAME = 'dynamic-v2';
 var STATIC_FILES = [
   '/',
@@ -247,3 +247,21 @@ self.addEventListener('notificationclick', function(event){
 self.addEventListener('notificationclose', function(event){
   console.log('notification was closed...', event);
 })
+
+self.addEventListener('push', function(event){
+  console.log('push notification received');
+  let data = {
+    title: 'New!',
+    content: 'New Content'
+  };
+  if(event.data){
+    data = JSON.parse(event.data.text());
+  }
+  const options = {
+    body: data.content,
+    icon: 'https://image.freepik.com/iconen-gratis/duim-omhoog-te-vinden-op-facebook_318-37196.jpg',
+  };
+  event.waitUntil(
+    self.registration.showNotification(data.title, options);
+  );
+});
